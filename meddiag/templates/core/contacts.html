@@ -20,34 +20,6 @@
 
     {%include 'header.html'%}
 
-    <!-- Menu -->
-
-    <div class="menu_container menu_mm">
-
-        <!-- Menu Close Button -->
-        <div class="menu_close_container">
-            <div class="menu_close"></div>
-        </div>
-
-        <!-- Menu Items -->
-        <div class="menu_inner menu_mm">
-            <div class="menu menu_mm">
-                <ul class="menu_list menu_mm">
-                    <li class="menu_item menu_mm"><a href="home.html">Home</a></li>
-                    <li class="menu_item menu_mm"><a href="about.html">About us</a></li>
-                    <li class="menu_item menu_mm"><a href="services.html">Services</a></li>
-                    <li class="menu_item menu_mm"><a href="contacts.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="menu_extra">
-                <div class="menu_appointment"><a href="#">Request an Appointment</a></div>
-                <div class="menu_emergencies">For Emergencies: +563 47558 623</div>
-            </div>
-
-        </div>
-
-    </div>
-
     <!-- Home -->
 
     <div class="home">
@@ -61,7 +33,7 @@
                             <div class="home_title"><span>CareMed</span> Контакты</div>
                             <div class="breadcrumbs">
                                 <ul>
-                                    <li><a href="#">Главная</a></li>
+                                    <li><a href="{% url 'core:home' %}">Главная</a></li>
                                     <li>Контакты</li>
                                 </ul>
                             </div>
@@ -100,7 +72,7 @@
                 </div>
 
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 ">
                         <div class="section_title"><h3>Обратная связь</h3></div>
                         <form method="post">
                             {% csrf_token %}

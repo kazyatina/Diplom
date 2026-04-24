@@ -18,31 +18,6 @@
 <body>
 <div class="super_container">
     {%include 'header.html'%}
-    <!-- Menu -->
-
-    <div class="menu_container menu_mm">
-
-        <!-- Menu Close Button -->
-        <div class="menu_close_container">
-            <div class="menu_close"></div>
-        </div>
-
-        <!-- Menu Items -->
-        <div class="menu_inner menu_mm">
-            <div class="menu menu_mm">
-                <ul class="menu_list menu_mm">
-                    <li class="menu_item menu_mm"><a href="home.html">Home</a></li>
-                    <li class="menu_item menu_mm"><a href="about.html">About us</a></li>
-                    <li class="menu_item menu_mm"><a href="services.html">Services</a></li>
-                    <li class="menu_item menu_mm"><a href="contacts.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="menu_extra">
-                <div class="menu_appointment"><a href="#">Request an Appointment</a></div>
-                <div class="menu_emergencies">For Emergencies: +563 47558 623</div>
-            </div>
-        </div>
-    </div>
 
     <!-- Home -->
 
@@ -193,27 +168,132 @@
                 </div>
                 <div class="row team_row">
 
-                    <!-- Team Member -->
-                    <div class="col-12">
-                        <div class="row">
-                            {% for doctor in doctors %}
-                            <div class="col-md-6 col-lg-4 mb-4">
-                                <div class="card">
-                                    {% if doctor.photo %}
-                                    <img src="{{ doctor.photo.url }}" class="card-img-top" alt="{{ doctor.name }}"
-                                         style="height: 250px; object-fit: contain;">
-                                    {% endif %}
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ doctor.name }}</h5>
-                                        <p class="card-text text-muted">{{ doctor.specialty }}</p>
-                                    </div>
-                                </div>
+                    <!-- Team Member фиксированные карточки-->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_1.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Виктория Генриховна Стук </a></div>
+                                <div class="team_member_title">Зав.отделением Кардиологии</div>
                             </div>
-                            {% empty %}
-                            <p>Врачи пока не добавлены</p>
-                            {% endfor %}
                         </div>
                     </div>
+
+                    <!-- Team Member -->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_2.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Иван Адольфович Срез</a></div>
+                                <div class="team_member_title">Зав.отделением Пластической хирургии</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Member -->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_3.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Наталья Карловна Род</a></div>
+                                <div class="team_member_title">Зав.отделением Неонатологии</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Member -->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_4.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Фрол Никитич Нос</a></div>
+                                <div class="team_member_title">Зав. Терапевтического отделением </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Team Member -->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_2.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Акакий Захарович Зуб</a></div>
+                                <div class="team_member_title">Зав.отделением Стоматологии</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Member -->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_3.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Фрида Карловна Скан</a></div>
+                                <div class="team_member_title">Зав.отделением Рентгенологии</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Member -->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_4.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Антон Павлович Хруст</a></div>
+                                <div class="team_member_title">Зав.отделением Хирургии</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Team Member -->
+                    <div class="col-lg-3 team_col">
+                        <div class="team_member">
+                            <div class="team_member_image d-flex flex-column align-items-center justify-content-end">
+                                <img
+                                        src="/images/team_1.png" alt=""></div>
+                            <div class="team_member_info">
+                                <div class="team_member_name"><a href="#">Мадонна Ивановна Жуть</a></div>
+                                <div class="team_member_title">Зав.отделением Гинекологии</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Member если нужно подтягивать из БД-->
+        <!--                    <div class="col-12">-->
+        <!--                        <div class="row">-->
+        <!--                            {% for doctor in doctors %}-->
+        <!--                            <div class="col-md-6 col-lg-4 mb-4">-->
+        <!--                                <div class="card">-->
+        <!--                                    {% if doctor.photo %}-->
+        <!--                                    <img src="{{ doctor.photo.url }}" class="card-img-top" alt="{{ doctor.name }}"-->
+        <!--                                         style="height: 250px; object-fit: contain;">-->
+        <!--                                    {% endif %}-->
+        <!--                                    <div class="card-body">-->
+        <!--                                        <h5 class="card-title">{{ doctor.name }}</h5>-->
+        <!--                                        <p class="card-text text-muted">{{ doctor.specialty }}</p>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </div>-->
+        <!--                            {% empty %}-->
+        <!--                            <p>Врачи пока не добавлены</p>-->
+        <!--                            {% endfor %}-->
+        <!--                        </div>-->
+        <!--                    </div>-->
                 </div>
             </div>
             {% include 'footer.html' %}

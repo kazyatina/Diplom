@@ -87,3 +87,52 @@
         </div>
     </div>
 </header>
+<!-- Menu -->
+
+<div class="menu_container menu_mm">
+
+    <!-- Menu Close Button -->
+    <div class="menu_close_container">
+        <div class="menu_close"></div>
+    </div>
+
+    <!-- Menu Items -->
+    <div class="menu_inner menu_mm">
+        <div class="menu menu_mm">
+            <ul class="menu_list menu_mm">
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'core:home' %}">Главная</a>
+                </li>
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'core:about' %}">О центре</a>
+                </li>
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'core:services' %}">Услуги</a>
+                </li>
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'core:contacts' %}">Контакты</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'accounts:profile' %}">Личный кабинет</a>
+                </li>
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'accounts:logout' %}?next=/">Выйти</a>
+                </li>
+                {% else %}
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'accounts:login' %}">Войти</a>
+                </li>
+                <li class="menu_item menu_mm">
+                    <a class="nav-link" href="{% url 'accounts:register' %}">Регистрация</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="menu_extra">
+            <div class="menu_appointment"><a href="{% url 'appointments:create' %}">Запишитесь на
+                прием</a></div>
+            <div class="menu_emergencies">Скорая помощь: 112</div>
+        </div>
+    </div>
+</div>
