@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Services</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="CareMed demo project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/styles/bootstrap4/bootstrap.min.css">
+    <link href="/static/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/static/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="/static/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+    <link rel="stylesheet" type="text/css" href="/static/plugins/OwlCarousel2-2.2.1/animate.css">
+    <link rel="stylesheet" type="text/css" href="/static/styles/services.css">
+    <link rel="stylesheet" type="text/css" href="/static/styles/services_responsive.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+
+<div class="super_container">
+
+    {%include 'header.html'%}
+    <!-- Menu -->
+
+    <div class="menu_container menu_mm">
+
+        <!-- Menu Close Button -->
+        <div class="menu_close_container">
+            <div class="menu_close"></div>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="menu_inner menu_mm">
+            <div class="menu menu_mm">
+                <ul class="menu_list menu_mm">
+                    <li class="menu_item menu_mm"><a href="home.html">Home</a></li>
+                    <li class="menu_item menu_mm"><a href="about.html">About us</a></li>
+                    <li class="menu_item menu_mm"><a href="services.html">Services</a></li>
+                    <li class="menu_item menu_mm"><a href="contacts.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="menu_extra">
+                <div class="menu_appointment"><a href="#">Request an Appointment</a></div>
+                <div class="menu_emergencies">For Emergencies: +563 47558 623</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Home -->
+
+    <div class="home">
+        <div class="home_background parallax-window" data-parallax="scroll" data-image-src="/images/services.jpg"
+             data-speed="0.8"></div>
+        <div class="home_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="home_content">
+                            <div class="home_title"><span>CareMed</span> Услуги</div>
+                            <div class="breadcrumbs">
+                                <ul>
+                                    <li><a href="{% url 'core:home' %}">Главная</a></li>
+                                    <li>Услуги</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services -->
+
+    <div class="services">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="section_title"><h2>Услуги нашего центра</h2></div>
+                </div>
+            </div>
+            <div class="row services_row">
+                {% for service in services %}
+
+                <div class="col-lg-4 col-md-6 service_col">
+                    <!-- Убираем ссылку href и добавляем атрибуты для открытия модального окна -->
+                    <div class="service text-center trans_200"
+                         data-bs-toggle="modal"
+                         data-bs-target="#serviceModal{{ service.id }}"
+                         style="cursor: pointer;">
+                        <div><img src="{{ service.image.url }}" class="card-img-top"
+                                                       alt="{{ service.title }}"
+                                                       style="height: 200px; object-fit: contain;">
+                        </div>
+                        <div class="service_title trans_200">{{ service.title }}</div>
+                        <div class="service_text">
+                            <p>{{ service.description }}</p>
+                        </div>
+                        <div class="service_title trans_200">{{ service.price }} руб.</div>
+                    </div>
+                </div>
+
+                <!-- Модальное окно для услуги -->
+                <div class="modal fade" id="serviceModal{{ service.id }}" tabindex="-1" aria-labelledby="serviceModalLabel{{ service.id }}"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="serviceModalLabel{{ service.id }}">{{ service.title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ service.description }}</p>
+                                <p><strong>Что входит в услугу:</strong></p>
+                                <ul>
+                                    <li>{{ service.full_description }}</li>
+                                </ul>
+                                <p><strong>Необходимые документы:</strong> паспорт и полис ОМС.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <button type="button" class="btn btn-primary"
+                                        onclick="window.location.href='{% url 'appointments:create' %}'">Записаться на
+                                    приём
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">Услуги пока не добавлены в базу данных.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/styles/bootstrap4/popper.js"></script>
+<script src="/static/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="/static/plugins/easing/easing.js"></script>
+<script src="/static/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="/static/js/services.js"></script>
+</body>
+</html>
