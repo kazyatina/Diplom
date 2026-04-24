@@ -1,31 +1,42 @@
 document.addEventListener('DOMContentLoaded', function() {
   const changePhotoBtn = document.querySelector('.btn-outline-primary.btn-sm');
+  const avatarForm = document.getElementById('avatarForm');
+  const avatarModalElement = document.getElementById('avatarModal');
 
   if (changePhotoBtn) {
     changePhotoBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      const avatarModal = new bootstrap.Modal(document.getElementById('avatarModal'));
+      const avatarModal = new bootstrap.Modal(avatarModalElement);
       avatarModal.show();
     });
   }
 
-  document.getElementById('avatarForm').addEventListener('submit', async function(e) {
+  if (!avatarForm) {
+    return;
+  }
+
+  avatarForm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const formData = new FormData(this);
-    // Добавляем CSRF‑токен вручную
+    const uploadUrl = this.getAttribute('action');
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    formData.append('csrfmiddlewaretoken', csrftoken);
+
+    if (!uploadUrl) {
+      alert('URL загрузки аватара не найден.');
+      return;
+    }
 
     try {
       console.log('Отправляем запрос на загрузку аватара...');
-      const response = await fetch('{% url "accounts:update_avatar" %}', {
+      const response = await fetch(uploadUrl, {
         method: 'POST',
         body: formData,
         headers: {
+          'X-CSRFToken': csrftoken,
           'X-Requested-With': 'XMLHttpRequest'
         },
-        credentials: 'include'
+        credentials: 'same-origin'
       });
 
       console.log('Статус ответа:', response.status);
@@ -44,8 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (avatarImg) {
           avatarImg.src = result.avatar_url + '?' + new Date().getTime();
         }
-        const avatarModal = bootstrap.Modal.getInstance(document.getElementById('avatarModal'));
-        avatarModal.hide();
+        if (
+          typeof bootstrap !== 'undefined' &&
+          bootstrap.Modal &&
+          typeof bootstrap.Modal.getOrCreateInstance === 'function'
+        ) {
+          bootstrap.Modal.getOrCreateInstance(avatarModalElement).hide();
+        } else if (typeof $ !== 'undefined' && typeof $.fn.modal === 'function') {
+          $('#avatarModal').modal('hide');
+        }
         alert('Аватар успешно обновлён!');
       } else {
         alert(`Ошибка: ${result.error || 'Неизвестная ошибка'}`);
@@ -65,7 +83,16 @@ document.addEventListener('DOMContentLoaded', function() {
       // Показываем индикатор загрузки
       modalBody.innerHTML = '<tr><td colspan="3" class="text-center">Загрузка...</td></tr>';
 
-      const response = await fetch('/api/medical-history/');
+      const medicalHistoryModal = document.getElementById('medicalHistoryModal');
+      const historyUrl = medicalHistoryModal
+        ? medicalHistoryModal.getAttribute('data-history-url')
+        : null;
+
+      if (!historyUrl) {
+        throw new Error('URL медицинской истории не найден');
+      }
+
+      const response = await fetch(historyUrl, { credentials: 'same-origin' });
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

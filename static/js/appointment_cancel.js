@@ -1,65 +1,76 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", () => {
   const cancelButtons = document.querySelectorAll('[data-bs-target="#cancelAppointmentModal"]');
-  const confirmBtn = document.getElementById('confirmCancelBtn');
+  const confirmBtn = document.getElementById("confirmCancelBtn");
+  const modalServiceTitle = document.getElementById("modalServiceTitle");
   let currentAppointmentId = null;
 
-  // Обработчик открытия модального окна
-  cancelButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      currentAppointmentId = this.getAttribute('data-appointment-id');
-      const serviceTitle = this.getAttribute('data-service-title');
-      document.getElementById('modalServiceTitle').textContent = serviceTitle;
+  if (!confirmBtn) {
+    return;
+  }
+
+  cancelButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      currentAppointmentId = button.getAttribute("data-appointment-id");
+      const serviceTitle = button.getAttribute("data-service-title");
+      if (modalServiceTitle) {
+        modalServiceTitle.textContent = serviceTitle || "";
+      }
     });
   });
 
-  // Обработчик подтверждения отмены
-  confirmBtn.addEventListener('click', async function() {
+  confirmBtn.addEventListener("click", async () => {
     if (!currentAppointmentId) {
-      console.error('ID записи не определён');
+      console.error("ID записи не определен");
       return;
     }
 
     try {
-      const response = await fetch(`/api/appointments/${currentAppointmentId}/cancel/`, {
-        method: 'POST',
+      const response = await fetch(`/api/${currentAppointmentId}/cancel/`, {
+        method: "POST",
         headers: {
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-          'Content-Type': 'application/json'
-        }
+          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")?.value || "",
+          "Content-Type": "application/json",
+        },
       });
 
-      if (response.ok) {
-        // Получаем элемент записи
-        const item = document.querySelector(`[data-appointment-id="${currentAppointmentId}"]`)
-          .closest('.list-group-item');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
 
-        // Обновляем бейдж статуса
-        const badge = item.querySelector('.text-end .status-badge');
+      const cancelButton = document.querySelector(`[data-appointment-id="${currentAppointmentId}"]`);
+      const item = cancelButton ? cancelButton.closest(".list-group-item") : null;
+      if (item) {
+        const badge = item.querySelector(".text-end .status-badge");
         if (badge) {
-          badge.textContent = 'Отменено';
-          badge.className = 'status-badge status-cancelled';
+          badge.textContent = "Отменено";
+          badge.className = "status-badge status-cancelled";
         }
+        cancelButton?.remove();
+      }
 
-        // Скрываем кнопку отмены
-        const cancelButton = item.querySelector('[data-appointment-id]');
-        if (cancelButton) {
-          cancelButton.remove();
-        }
+      const modalElement = document.getElementById("cancelAppointmentModal");
+      const modal = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+      if (modal) {
+        modal.hide();
+      } else if (modalElement) {
+        new bootstrap.Modal(modalElement).hide();
+      }
 
-        // Закрываем модальное окно
-        const modalElement = document.getElementById('cancelAppointmentModal');
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-          modal.hide();
-        } else {
-          // Если экземпляр модального окна не найден, используем метод hide напрямую
-          const bootstrapModal = new bootstrap.Modal(modalElement);
-          bootstrapModal.hide();
-        }
-
-        // Показываем уведомление об успехе
-        const successAlert = document.createElement('div');
-        successAlert.className = 'alert alert-success alert-dismissible fade show mt-3';
-        successAlert.role = 'alert';
-        successAlert.innerHTML = `
-          <strong>Успешно!</strong>
+      const successAlert = document.createElement("div");
+      successAlert.className = "alert alert-success alert-dismissible fade show mt-3";
+      successAlert.role = "alert";
+      successAlert.innerHTML = `
+        <strong>Успешно!</strong> Запись отменена.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      const container = document.querySelector(".container.mt-5.mb-5") || document.body;
+      container.prepend(successAlert);
+      setTimeout(() => successAlert.remove(), 3000);
+    } catch (error) {
+      console.error("Ошибка при отмене записи:", error);
+      alert("Не удалось отменить запись. Попробуйте еще раз.");
+    } finally {
+      currentAppointmentId = null;
+    }
+  });
+});

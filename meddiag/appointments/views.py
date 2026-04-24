@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.views.decorators.csrf import csrf_exempt
 
 from .forms import AppointmentForm
 from .models import Appointment
@@ -27,12 +26,23 @@ def create_appointment(request):
     return render(request, "appointments/create.html", {"form": form})
 
 @login_required
-@csrf_exempt
 def cancel_appointment(request, appointment_id):
+    if request.method != "POST":
+        return JsonResponse(
+            {"success": False, "error": "Метод не поддерживается"},
+            status=405,
+        )
+
     try:
         appointment = Appointment.objects.get(id=appointment_id, user=request.user)
-        appointment.status = 'cancelled'
+        if appointment.status == "cancelled":
+            return JsonResponse({"success": True, "message": "Запись уже отменена"})
+
+        appointment.status = "cancelled"
         appointment.save()
-        return JsonResponse({'success': True})
+        return JsonResponse({"success": True, "message": "Запись успешно отменена"})
     except Appointment.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Запись не найдена'}, status=404)
+        return JsonResponse(
+            {"success": False, "error": "Запись не найдена"},
+            status=404,
+        )
