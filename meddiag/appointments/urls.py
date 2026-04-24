@@ -5,7 +5,11 @@ app_name = "appointments"
 
 urlpatterns = [
     path("create/", views.create_appointment, name="create"),
-    path('<int:appointment_id>/cancel/', views.cancel_appointment, name='cancel_appointment'),
+    path(
+        "appointments/<int:appointment_id>/cancel/",
+        views.cancel_appointment,
+        name="cancel_appointment",
+    ),
 ]
 
 from django.conf import settings
