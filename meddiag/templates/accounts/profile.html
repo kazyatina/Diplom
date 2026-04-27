@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <title>Личный кабинет</title>
@@ -23,33 +24,6 @@
 <div class="super_container">
 
     {%include 'header.html'%}
-    <!-- Menu -->
-
-    <div class="menu_container menu_mm">
-
-        <!-- Menu Close Button -->
-        <div class="menu_close_container">
-            <div class="menu_close"></div>
-        </div>
-
-        <!-- Menu Items -->
-        <div class="menu_inner menu_mm">
-            <div class="menu menu_mm">
-                <ul class="menu_list menu_mm">
-                    <li class="menu_item menu_mm"><a href="home.html">Home</a></li>
-                    <li class="menu_item menu_mm"><a href="about.html">About us</a></li>
-                    <li class="menu_item menu_mm"><a href="services.html">Services</a></li>
-                    <li class="menu_item menu_mm"><a href="contacts.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="menu_extra">
-                <div class="menu_appointment"><a href="#">Request an Appointment</a></div>
-                <div class="menu_emergencies">For Emergencies: +563 47558 623</div>
-            </div>
-
-        </div>
-
-    </div>
 
     <!-- Home -->
 
@@ -319,7 +293,7 @@
 
                                     <div class="text-end d-flex gap-2 justify-content-end">
                                         {% if appt.status == 'scheduled' %}
-                                        <span class="status-badge status-scheduled">Запланировано</span>
+                                        <span class="status-badge status-scheduled" style="margin-right: 1rem;">Запланировано</span>
                                         <button
                                                 type="button"
                                                 class="cancel-btn"
@@ -327,7 +301,6 @@
                                                 data-bs-target="#cancelAppointmentModal"
                                                 data-appointment-id="{{ appt.id }}"
                                                 data-service-title="{{ appt.service.title }}"
-                                                data-cancel-url="{% url 'appointments:cancel_appointment' appt.id %}"
                                         >
                                             Отменить запись
                                         </button>
@@ -370,12 +343,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
-            <form
-                method="post"
-                enctype="multipart/form-data"
-                id="avatarForm"
-                action="{% url 'accounts:update_avatar' %}"
-            >
+            <form method="post" enctype="multipart/form-data" id="avatarForm">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
@@ -399,7 +367,6 @@
 <div
         class="modal fade"
         id="medicalHistoryModal"
-        data-history-url="{% url 'accounts:medical_history_api' %}"
         tabindex="-1"
         aria-labelledby="medicalHistoryLabel"
         aria-hidden="true"
@@ -461,93 +428,8 @@
 <script src="/static/plugins/easing/easing.js"></script>
 <script src="/static/plugins/parallax-js-master/parallax.min.js"></script>
 <script src="/static/js/services.js"></script>
-<script src="/static/js/medical_modal.js?v=3"></script>
+<script src="/static/js/medical_modal.js' %}"></script>
 {% csrf_token %}
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const cancelButtons = document.querySelectorAll('[data-bs-target="#cancelAppointmentModal"]');
-    const confirmBtn = document.getElementById("confirmCancelBtn");
-    const modalServiceTitle = document.getElementById("modalServiceTitle");
-    let currentAppointmentId = null;
-
-    if (!confirmBtn) {
-        return;
-    }
-
-    cancelButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            currentAppointmentId = button.getAttribute("data-appointment-id");
-            const serviceTitle = button.getAttribute("data-service-title");
-            if (modalServiceTitle) {
-                modalServiceTitle.textContent = serviceTitle || "";
-            }
-        });
-    });
-
-    confirmBtn.addEventListener("click", async () => {
-        if (!currentAppointmentId) {
-            return;
-        }
-
-        try {
-            const cancelButton = document.querySelector(`[data-appointment-id="${currentAppointmentId}"]`);
-            const cancelUrl = cancelButton ? cancelButton.getAttribute("data-cancel-url") : null;
-            if (!cancelUrl) {
-                throw new Error("URL отмены не найден");
-            }
-
-            const response = await fetch(cancelUrl, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")?.value || "",
-                    "Content-Type": "application/json",
-                },
-                credentials: "same-origin",
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const item = cancelButton ? cancelButton.closest(".list-group-item") : null;
-
-            if (item) {
-                const badge = item.querySelector(".text-end .status-badge");
-                if (badge) {
-                    badge.textContent = "Отменено";
-                    badge.className = "status-badge status-cancelled";
-                }
-                cancelButton.remove();
-            }
-
-            const modalElement = document.getElementById("cancelAppointmentModal");
-            if (modalElement) {
-                if (
-                    typeof bootstrap !== "undefined" &&
-                    bootstrap.Modal &&
-                    typeof bootstrap.Modal.getOrCreateInstance === "function"
-                ) {
-                    bootstrap.Modal.getOrCreateInstance(modalElement).hide();
-                } else if (typeof $ !== "undefined" && typeof $.fn.modal === "function") {
-                    $("#cancelAppointmentModal").modal("hide");
-                } else {
-                    modalElement.classList.remove("show");
-                    modalElement.style.display = "none";
-                    document.body.classList.remove("modal-open");
-                    const backdrop = document.querySelector(".modal-backdrop");
-                    if (backdrop) {
-                        backdrop.remove();
-                    }
-                }
-            }
-        } catch (error) {
-            console.error("Ошибка при отмене записи:", error);
-            alert("Не удалось отменить запись. Попробуйте еще раз.");
-        } finally {
-            currentAppointmentId = null;
-        }
-    });
-});
-</script>
+<script src="/static/js/appointment_cancel.js"></script>
 </body>
 </html>
