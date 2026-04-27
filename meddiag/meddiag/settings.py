@@ -12,25 +12,20 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR.parent / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "django-insecure-hax_n2j6p!#xvxn20w7=n0v^6kl*v2x=xl8p7xtcaf)$pxl(7o",
-)
+SECRET_KEY = "django-insecure-hax_n2j6p!#xvxn20w7=n0v^6kl*v2x=xl8p7xtcaf)$pxl(7o"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Application definition
 
@@ -83,11 +78,11 @@ WSGI_APPLICATION = "meddiag.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("DB_NAME", os.getenv("NAME", "meddiag")),
-        "USER": os.getenv("DB_USER", os.getenv("USER", "mac")),
-        "PASSWORD": os.getenv("DB_PASSWORD", os.getenv("PASSWORD", "123456")),
-        "HOST": os.getenv("DB_HOST", os.getenv("HOST", "localhost")),
-        "PORT": os.getenv("DB_PORT", os.getenv("PORT", "5432")),
+        "NAME": os.getenv("NAME"),
+        "USER": "postgres",
+        "PASSWORD": "123456",
+        "HOST": os.getenv("HOST"),
+        "PORT": "5432",
     }
 }
 
@@ -138,18 +133,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Статические файлы
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR.parent, "static"),
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # настройка SMTP сервера для отправки рассылок
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.yandex.ru")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", "465"))
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() == "true"
-EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "True").lower() == "true"
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "django.sky.pro@yandex.ru")
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = "django.sky.pro@yandex.ru"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

@@ -1,10 +1,12 @@
 asgiref==3.11.1
 asttokens==3.0.1
 black==26.3.1
+bootstrap4==0.1.0
 click==8.3.1
 colorama==0.4.6
 decorator==5.2.1
 Django==6.0.3
+django-cors-headers==4.9.0
 django-countries==8.2.0
 dotenv==0.9.9
 executing==2.2.1
@@ -27,7 +29,7 @@ pure_eval==0.2.3
 pycodestyle==2.14.0
 pyflakes==3.4.0
 Pygments==2.19.2
-python-dotenv==1.2.1
+python-dotenv==1.2.2
 pytokens==0.4.0
 redis==7.1.0
 sqlparse==0.5.5
