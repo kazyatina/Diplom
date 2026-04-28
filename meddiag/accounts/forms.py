@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from .models import UserProfile
@@ -8,8 +8,8 @@ from .models import UserProfile
 class CustomUserCreationForm(UserCreationForm):
     """Форма регистрации с дополнительными полями"""
 
-    first_name = forms.CharField(label="Имя", max_length=100),
-    last_name = forms.CharField(label="Фамилия", max_length=100),
+    first_name = (forms.CharField(label="Имя", max_length=100),)
+    last_name = (forms.CharField(label="Фамилия", max_length=100),)
     phone = forms.CharField(max_length=20, required=False, label="Телефон")
     birth_date = forms.DateField(
         required=False,
@@ -19,7 +19,6 @@ class CustomUserCreationForm(UserCreationForm):
     address = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), required=False, label="Адрес"
     )
-
 
     class Meta:
         model = User
@@ -31,7 +30,6 @@ class CustomUserCreationForm(UserCreationForm):
             "phone",
             "birth_date",
             "address",
-
         )
 
     def save(self, commit=True):
@@ -53,8 +51,6 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            # "first_name",
-            # "last_name",
             "phone",
             "birth_date",
             "address",

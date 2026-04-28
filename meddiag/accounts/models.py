@@ -1,11 +1,9 @@
-from django.contrib.auth.forms import UserCreationForm
+from appointments.models import Appointment
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
-
-from appointments.models import Appointment
 
 
 class UserProfile(models.Model):
@@ -21,8 +19,8 @@ class UserProfile(models.Model):
     user_type = models.CharField(
         "Тип пользователя", max_length=20, choices=USER_TYPES, default="patient"
     )
-    first_name = models.CharField("Имя", max_length=100),
-    last_name = models.CharField("Фамилия", max_length=100),
+    first_name = (models.CharField("Имя", max_length=100),)
+    last_name = (models.CharField("Фамилия", max_length=100),)
     phone = models.CharField("Телефон", max_length=20, blank=True)
     birth_date = models.DateField("Дата рождения", null=True, blank=True)
     address = models.TextField("Адрес", blank=True)
@@ -80,4 +78,3 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     """Сохраняет профиль пользователя при сохранении учётной записи"""
     instance.profile.save()
-

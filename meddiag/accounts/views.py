@@ -1,13 +1,11 @@
+from appointments.models import Appointment
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 
-from appointments.models import Appointment
 from .forms import CustomUserCreationForm, ProfileUpdateForm
 from .models import UserProfile
 
@@ -81,38 +79,43 @@ def update_avatar(request):
     except UserProfile.DoesNotExist:
         # Создаём профиль, если его нет
         profile = UserProfile.objects.create(user=request.user)
-    if request.method == 'POST' and request.FILES.get('avatar'):
+    if request.method == "POST" and request.FILES.get("avatar"):
         try:
             profile = request.user.profile
-            profile.avatar = request.FILES['avatar']
+            profile.avatar = request.FILES["avatar"]
             profile.save()
-            return JsonResponse({
-                'success': True,
-                'avatar_url': request.build_absolute_uri(profile.avatar.url)
-            })
+            return JsonResponse(
+                {
+                    "success": True,
+                    "avatar_url": request.build_absolute_uri(profile.avatar.url),
+                }
+            )
         except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'error': f'Ошибка при сохранении: {str(e)}'
-            }, status=400)
-    return JsonResponse({
-        'success': False,
-        'error': 'Файл не загружен или неверный метод запроса'
-    }, status=400)
+            return JsonResponse(
+                {"success": False, "error": f"Ошибка при сохранении: {str(e)}"},
+                status=400,
+            )
+    return JsonResponse(
+        {"success": False, "error": "Файл не загружен или неверный метод запроса"},
+        status=400,
+    )
+
 
 @login_required
 def get_medical_history(request):
     # Получаем записи пользователя (прошедшие и будущие)
-    records = Appointment.objects.filter(
-        user=request.user
-    ).order_by('-date')  # сортировка по дате (новые сверху)
+    records = Appointment.objects.filter(user=request.user).order_by(
+        "-date"
+    )  # сортировка по дате (новые сверху)
 
     data = []
     for record in records:
-        data.append({
-            'date': record.date.strftime('%d.%m.%Y %H:%M'),
-            'service': record.service.title if record.service else 'Не указано',
-            'doctor': f"{record.doctor.name}"
-        })
+        data.append(
+            {
+                "date": record.date.strftime("%d.%m.%Y %H:%M"),
+                "service": record.service.title if record.service else "Не указано",
+                "doctor": f"{record.doctor.name}",
+            }
+        )
 
-    return JsonResponse({'records': data})
+    return JsonResponse({"records": data})
