@@ -1,15 +1,14 @@
+from core.models import Doctor, Service
 from django import forms
 
-from core.models import Doctor, Service
 from .models import Appointment
 
 
 class AppointmentForm(forms.ModelForm):
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['doctor'].queryset = Doctor.objects.all()
-        self.fields['service'].queryset = Service.objects.all()
-
+        self.fields["doctor"].queryset = Doctor.objects.all()
+        self.fields["service"].queryset = Service.objects.all()
 
     class Meta:
         model = Appointment

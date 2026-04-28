@@ -4,6 +4,7 @@ from django.utils import timezone
 
 User = get_user_model()
 
+
 class Appointment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     service = models.ForeignKey("core.Service", on_delete=models.CASCADE)

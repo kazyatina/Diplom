@@ -25,6 +25,7 @@ def create_appointment(request):
         form = AppointmentForm(initial=initial, user=request.user)
     return render(request, "appointments/create.html", {"form": form})
 
+
 @login_required
 def cancel_appointment(request, appointment_id):
     if request.method != "POST":
